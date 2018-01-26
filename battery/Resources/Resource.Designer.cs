@@ -60,8 +60,8 @@ namespace battery
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f05000e
-			public const int Cancel = 2131034126;
+			// aapt resource value: 0x7f050010
+			public const int Cancel = 2131034128;
 			
 			// aapt resource value: 0x7f05000b
 			public const int Time = 2131034123;
@@ -93,8 +93,11 @@ namespace battery
 			// aapt resource value: 0x7f050009
 			public const int space2 = 2131034121;
 			
-			// aapt resource value: 0x7f05000d
-			public const int start = 2131034125;
+			// aapt resource value: 0x7f05000e
+			public const int speed = 2131034126;
+			
+			// aapt resource value: 0x7f05000f
+			public const int start = 2131034127;
 			
 			// aapt resource value: 0x7f050003
 			public const int tableRow1 = 2131034115;
@@ -104,6 +107,9 @@ namespace battery
 			
 			// aapt resource value: 0x7f050004
 			public const int textView2 = 2131034116;
+			
+			// aapt resource value: 0x7f05000d
+			public const int textView3 = 2131034125;
 			
 			static Id()
 			{

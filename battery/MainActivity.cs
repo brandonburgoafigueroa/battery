@@ -18,10 +18,16 @@ namespace battery
         TextView time;
         Thread hilo;
         Button cancel;
+        int ValueInitial;
+        int ValueFinal;
+        TextView speed;
+        TextView TextView3;
+        
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
-            
+            Vibrate();
+
             // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
             Timer=FindViewById<TextView>(Resource.Id.Timer);
@@ -29,7 +35,12 @@ namespace battery
             time.Text = "";
             Timer.Text = "";
             levelText = FindViewById<TextView>(Resource.Id.actualLevel);
+            speed = FindViewById<TextView>(Resource.Id.speed);
+            TextView3 = FindViewById<TextView>(Resource.Id.textView3);
+            speed.Text = "";
+            TextView3.Text = "";
             levelText.Text = CrossBattery.Current.RemainingChargePercent.ToString();
+            ValueInitial = Convert.ToInt32(levelText.Text);
             capacity = FindViewById<TextView>(Resource.Id.capacity);
             capacity.Text = "0";
             ShowMessage();
@@ -46,7 +57,15 @@ namespace battery
             catch { }
             System.Environment.Exit(0);
         }
-
+        private void Vibrate()
+        {
+            Vibrator vibrator = (Vibrator)GetSystemService(Context.VibratorService);
+            vibrator.Vibrate(200);
+            Thread.Sleep(300);
+            vibrator.Vibrate(200);
+            Thread.Sleep(300);
+            vibrator.Vibrate(200);
+        }
         private void Start_Click(object sender, EventArgs e)
         {
 
@@ -63,9 +82,17 @@ namespace battery
                 FindViewById<TextView>(Resource.Id.Timer).Text = time;
             });
         }
+        public void UpdateResult(string value)
+        {
+            RunOnUiThread(() =>
+            {
+                TextView3.Text = "Velocidad de carga";
+                speed.Text = value+"/Min";
+            });
+        }
         public void Clock()
         {
-            int min = 4, seg = 59;
+            int min = 5, seg = 00;
             while (min >= 0 && seg >= 0)
             {
                 Thread.Sleep(1000);
@@ -76,7 +103,7 @@ namespace battery
                     min = min - 1;
                     if (min == -1)
                     {
-                        Calcular();
+                        Calculate();
                     }
                     
                 }
@@ -101,9 +128,19 @@ namespace battery
             return time;
 
         }
-        public void Calcular()
+        public void Calculate()
         {
-            
+            ValueFinal = CrossBattery.Current.RemainingChargePercent;
+            int dif = ValueInitial - ValueFinal;
+            int result = dif / 5;
+            UpdateResult(Convert.ToString(result));
+            FinishCalc();
+            Vibrate();
+            hilo.Abort();
+        }
+        public void FinishCalc()
+        {
+            UpdateTimer("0:00");
         }
         public void ShowInstructions()
         {
