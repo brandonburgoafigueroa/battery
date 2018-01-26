@@ -9,13 +9,15 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 namespace battery
 {
-    [Activity(Label = "battery", MainLauncher = true, Icon = "@drawable/icon")]
+    [Activity(Label = "Battery", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
         TextView levelText;
         TextView capacity;
         TextView Timer;
         TextView time;
+        Thread hilo;
+        Button cancel;
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -24,7 +26,8 @@ namespace battery
             SetContentView(Resource.Layout.Main);
             Timer=FindViewById<TextView>(Resource.Id.Timer);
            time= FindViewById<TextView>(Resource.Id.Time);
-     
+            time.Text = "";
+            Timer.Text = "";
             levelText = FindViewById<TextView>(Resource.Id.actualLevel);
             levelText.Text = CrossBattery.Current.RemainingChargePercent.ToString();
             capacity = FindViewById<TextView>(Resource.Id.capacity);
@@ -32,13 +35,23 @@ namespace battery
             ShowMessage();
             Button start= FindViewById<Button>(Resource.Id.start);
             start.Click += Start_Click;
-
+            cancel = FindViewById<Button>(Resource.Id.Cancel);
+            cancel.Click += Cancel_Click;
+            cancel.Visibility = Android.Views.ViewStates.Invisible;
         }
-        
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            try { hilo.Abort(); }
+            catch { }
+            System.Environment.Exit(0);
+        }
+
         private void Start_Click(object sender, EventArgs e)
         {
-           
-            Thread hilo = new Thread(Clock);
+
+            cancel.Visibility = Android.Views.ViewStates.Visible;
+            hilo = new Thread(Clock);
             hilo.Start();
         }
        
@@ -52,9 +65,6 @@ namespace battery
         }
         public void Clock()
         {
-
-            string time;
-            
             int min = 4, seg = 59;
             while (min >= 0 && seg >= 0)
             {
@@ -70,9 +80,26 @@ namespace battery
                     }
                     
                 }
-                time = Convert.ToString(min) + ":" + Convert.ToString(seg);
-                UpdateTimer(time);
+               
+                UpdateTimer(TimerFormat(min, seg));
           }
+        }
+        public string TimerFormat(int min, int seg)
+        {
+            string time;
+            string segundos;
+            if (seg<10)
+            {
+                segundos = "0" + Convert.ToString(seg);
+            }
+            else
+            {
+                segundos = Convert.ToString(seg);
+
+            }
+            time = Convert.ToString(min) + ":" + segundos;
+            return time;
+
         }
         public void Calcular()
         {

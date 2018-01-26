@@ -60,6 +60,9 @@ namespace battery
 		public partial class Id
 		{
 			
+			// aapt resource value: 0x7f05000e
+			public const int Cancel = 2131034126;
+			
 			// aapt resource value: 0x7f05000b
 			public const int Time = 2131034123;
 			

@@ -89,4 +89,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/start" />
+    <Button
+        android:text="Cancelar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Cancel" />
 </LinearLayout>
